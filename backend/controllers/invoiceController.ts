@@ -103,7 +103,7 @@ export const generateInvoice = async (req: AuthRequest, res: Response) => {
 
             .footer { 
               text-align: center; 
-              background: #1a1f3b; 
+              background: #272833; 
               color: white; 
               padding: 15px; 
               border-radius: 20px; 
