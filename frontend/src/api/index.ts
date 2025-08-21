@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: import.meta.env.PROD 
+    ? "/api" // when deployed on Vercel
+    : "http://localhost:5000/api", // when running locally
 });
 
 API.interceptors.request.use((req) => {

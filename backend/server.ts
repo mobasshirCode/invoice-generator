@@ -1,31 +1,32 @@
+import express, { Application } from "express";
+import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+
+// Load environment variables
 dotenv.config();
 
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import authRoutes from "./routes/authRoutes";
-import invoiceRoutes from "./routes/invoiceRoutes";
-import productRoutes from "./routes/productRoutes";
+const app: Application = express();
 
-const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:5173", // frontend
-    credentials: true, // allow cookies/headers from ffrontend
-  })
-);
+// Middleware
+app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/products/invoice", invoiceRoutes);
-app.use("/api/products", productRoutes);
 
-mongoose.connect(process.env.MONGO_URI as string)  // .env me yaad se daalna h
-  .then(() => console.log("MongoDB Atlas Connected Hogya"))
-  .catch(err => console.log("MongoDB Error:", err));
+// MongoDB Connection
+const MONGO_URI = process.env.MONGO_URI as string;
+if (!MONGO_URI) {
+  console.error("Missing MONGO_URI in environment variables");
+} else {
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("MongoDB connection error:", err));
+}
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
+// Example route
+app.get("/api/hello", (_req, res) => {
+  res.json({ message: "Hello from Vercel Backend!" });
 });
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+
+export default app;
